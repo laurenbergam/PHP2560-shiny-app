@@ -1,5 +1,5 @@
 #' Democrats sent by State
-#'
+#' 
 #' This function counts the number of Democrats a given state sent to Congress
 #' in each election year from 1998 to 2016.
 #' @param state Name of the state that you want the information for. Must be capitalized appropriately.

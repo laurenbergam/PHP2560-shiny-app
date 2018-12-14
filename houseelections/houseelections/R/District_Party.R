@@ -1,5 +1,5 @@
 #' District broken down by party
-#' 
+#'
 #' Given a state and a district in that state, this function will return the number
 #' of Republicans, Democrats, Independents that district sent to Congress. It also
 #' gives the average margin of victory for the elections in that district.
@@ -12,7 +12,7 @@
 #' District_Results("Pennsylvania", 10)
 #' District_Results("Wyoming")
 
-District_Party <- function(state, district_no = 0){
+District_Party <- function(state, district_no = 1){
   data <- District_Results(state, district_no)
   dems <- 0
   reps <- 0

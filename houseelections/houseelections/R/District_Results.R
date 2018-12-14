@@ -1,7 +1,7 @@
 #' Results from a district
-#' 
+#'
 #' Given a state and a district in that state, this function will return all of the
-#' election results from that district. If the state only has one district, leave the 
+#' election results from that district. If the state only has one district, leave the
 #' second argument district_no blank.
 #' @param state The name of the state with the district you are interested in.
 #' It must also be properly capitalized.
@@ -13,10 +13,11 @@
 #' District_Results("Alaska")
 
 
-District_Results <- function(state, district_no = 0){
+District_Results <- function(state, district_no = 1){
   Election_Data[,1] <- gsub("[[:space:]]", " ", Election_Data[,1])
   district <- paste(state, district_no, sep = " ")
-  if(district_no == 0){
+  k <- filter(Election_Data, State == state)
+  if(grepl("large", k$District[1])){
     m <- filter(Election_Data, grepl(state, District))
   }else{
     m <- filter(Election_Data, District == district)
