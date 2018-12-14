@@ -4,7 +4,7 @@
 \alias{District_Results}
 \title{Results from a district}
 \usage{
-District_Results(state, district_no = 0)
+District_Results(state, district_no = 1)
 }
 \arguments{
 \item{state}{The name of the state with the district you are interested in.
@@ -15,7 +15,7 @@ a numeric (no parantheses needed).}
 }
 \description{
 Given a state and a district in that state, this function will return all of the
-election results from that district. If the state only has one district, leave the 
+election results from that district. If the state only has one district, leave the
 second argument district_no blank.
 }
 \examples{

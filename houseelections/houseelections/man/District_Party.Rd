@@ -4,7 +4,7 @@
 \alias{District_Party}
 \title{District broken down by party}
 \usage{
-District_Party(state, district_no = 0)
+District_Party(state, district_no = 1)
 }
 \arguments{
 \item{state}{The name of the state with the district you are interested in.
