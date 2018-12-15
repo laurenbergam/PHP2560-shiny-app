@@ -14,7 +14,8 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
-
+library(houseelections)
+load("~/R/final-project-houseelections/houseelections/houseelections/data/Election_Data2.Rdata")
 ```
 
 ## Gross Domestic Product Data (gdp_state and gdp_status)
@@ -39,3 +40,45 @@ gdp_status("Virginia","2012","2016")
 ```
 
 Note: year1 must occur before year2. This is to prevent incorrect conclusions drawn from the function output, as the function is intended for changes over time.
+
+##House of Representatives Election Data 1998-2016 Functions
+
+The following functions can be used to obtain information from the dataset "Election_Data", which contains data from the past 20 years of House of Representatives elections (no Senate elections). This data was scraped from Wikipedia.
+
+### Democrats_State (also Republicans_State, Independents_State)
+This function takes the name of a state, and tells you how many Democrats that state sent to Congress for each of the years included in the data. There are similar functions for Republicans and Independents as well. Note that the state must be properly capitalized when entered.
+
+```{r}
+Democrats_State("Kentucky")
+Republicans_State("Minnesota")
+```
+
+### State_Party_Data
+This function uses the functions above to give the number of Democrats, Republicans and Independents sent to Congress by a given state in each of the election years in the data. The data is formatted in such a way to make it easy to produce a graph of the info. 
+
+``` r
+State_Party_Data("Maryland")
+```
+### House_Control
+Given an election year, this function returns the number of Republicans, Democrats and Independents sent to the House of Representatives that year. It also returns the majority party, as well as how many more votes the majority party has over the minority party.
+
+```{r}
+House_Control(2004)
+```
+
+### District_Results and District_Party
+These functions give information about a district. The function District_Results returns a table with all of the election results in the data from that district. The function District_Party tells you how many Democrats, Republicans and Independents that district sent to the House of Representatives in the years covered by the data, as well as the average margin of victory of candidates in that district. The functions take two inputs: the state, and the number of the district. The state is a character input which must be capitalized, the district number is a numeric. For states that only have one district, the second argument can be left blank.
+
+```{r, eval = F}
+District_Results("Arkansas", 3)
+```
+```{r}
+District_Party("Arkansas", 3)
+```
+### Representative_Info
+This function takes the name of a Representative who won a general election in the years covered by the data. It returns a few basic facts about them.
+
+```{r}
+Representative_Info("Nancy Pelosi")
+```
+
