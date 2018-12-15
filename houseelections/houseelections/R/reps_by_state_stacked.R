@@ -1,3 +1,12 @@
+#' Plot Representatives by State
+#'
+#' Given a year, this function graphs the number of representatives per state 
+#' colored by the party of the representative. 
+#' @param year The year must be an even number between and including 1998 and 2016. 
+#' @export
+#' @examples
+#' reps_by_state_stacked(2002)
+
 reps_by_state_stacked <- function(year) {
   if (year >= 1998 & year <= 2016 & as.numeric(year) %%2 == 0) {
     load(file = "~/Brown/PHP 2560/week-09-inclass-blrp-project/Election_Data2.RData")
