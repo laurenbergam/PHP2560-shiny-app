@@ -6,7 +6,7 @@
 #' @param year1
 #' @param year2
 #' @export
-#' @example 
+#' @examples  
 #' gdp_state("Virginia", "1998", "2000")
 
 gdp_status <- function(state, year1, year2){
