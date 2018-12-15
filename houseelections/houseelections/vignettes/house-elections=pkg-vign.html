@@ -113,6 +113,63 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>Note: year1 must occur before year2. This is to prevent incorrect conclusions drawn from the function output, as the function is intended for changes over time.</p>
 </div>
 </div>
+<div id="house-of-representatives-election-data-1998-2016-functions" class="section level2">
+<h2>House of Representatives Election Data 1998-2016 Functions</h2>
+<p>The following functions can be used to obtain information from the dataset “Election_Data”, which contains data from the past 20 years of House of Representatives elections (no Senate elections). This data was scraped from Wikipedia.</p>
+<div id="democrats_state-also-republicans_state-independents_state" class="section level3">
+<h3>Democrats_State (also Republicans_State, Independents_State)</h3>
+<p>This function takes the name of a state, and tells you how many Democrats that state sent to Congress for each of the years included in the data. There are similar functions for Republicans and Independents as well. Note that the state must be properly capitalized when entered.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">Democrats_State</span>(<span class="st">&quot;Kentucky&quot;</span>)
+<span class="co">#&gt; 1998 2000 2002 2004 2006 2008 2010 2012 2014 2016 </span>
+<span class="co">#&gt;    1    1    1    1    2    2    2    1    1    1</span>
+<span class="kw">Republicans_State</span>(<span class="st">&quot;Minnesota&quot;</span>)
+<span class="co">#&gt; 1998 2000 2002 2004 2006 2008 2010 2012 2014 2016 </span>
+<span class="co">#&gt;    2    3    4    4    3    3    4    3    3    3</span></code></pre></div>
+</div>
+<div id="state_party_data" class="section level3">
+<h3>State_Party_Data</h3>
+<p>This function uses the functions above to give the number of Democrats, Republicans and Independents sent to Congress by a given state in each of the election years in the data. The data is formatted in such a way to make it easy to produce a graph of the info.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">State_Party_Data</span>(<span class="st">&quot;Maryland&quot;</span>)</code></pre></div>
+</div>
+<div id="house_control" class="section level3">
+<h3>House_Control</h3>
+<p>Given an election year, this function returns the number of Republicans, Democrats and Independents sent to the House of Representatives that year. It also returns the majority party, as well as how many more votes the majority party has over the minority party.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">House_Control</span>(<span class="dv">2004</span>)
+<span class="co">#&gt; $Democrats</span>
+<span class="co">#&gt; [1] 202</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $Republicans</span>
+<span class="co">#&gt; [1] 232</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $Independents</span>
+<span class="co">#&gt; [1] 1</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $Control</span>
+<span class="co">#&gt; [1] &quot;Republican&quot;</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $Margin</span>
+<span class="co">#&gt; [1] 30</span></code></pre></div>
+</div>
+<div id="district_results-and-district_party" class="section level3">
+<h3>District_Results and District_Party</h3>
+<p>These functions give information about a district. The function District_Results returns a table with all of the election results in the data from that district. The function District_Party tells you how many Democrats, Republicans and Independents that district sent to the House of Representatives in the years covered by the data, as well as the average margin of victory of candidates in that district. The functions take two inputs: the state, and the number of the district. The state is a character input which must be capitalized, the district number is a numeric. For states that only have one district, the second argument can be left blank.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">District_Results</span>(<span class="st">&quot;Arkansas&quot;</span>, <span class="dv">3</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">District_Party</span>(<span class="st">&quot;Arkansas&quot;</span>, <span class="dv">3</span>)
+<span class="co">#&gt;      Democrats    Republicans   Independents Average Margin </span>
+<span class="co">#&gt;        0.00000       10.00000        0.00000       53.34444</span></code></pre></div>
+</div>
+<div id="representative_info" class="section level3">
+<h3>Representative_Info</h3>
+<p>This function takes the name of a Representative who won a general election in the years covered by the data. It returns a few basic facts about them.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">Representative_Info</span>(<span class="st">&quot;Nancy Pelosi&quot;</span>)
+<span class="co">#&gt;             Representative                     Served </span>
+<span class="co">#&gt;             &quot;Nancy Pelosi&quot;                   &quot;1988- &quot; </span>
+<span class="co">#&gt;                      Party                      State </span>
+<span class="co">#&gt;                 &quot;Democrat&quot;               &quot;California&quot; </span>
+<span class="co">#&gt; Average Winning Percentage </span>
+<span class="co">#&gt;                    &quot;81.43&quot;</span></code></pre></div>
+</div>
+</div>
 
 
 

@@ -56,7 +56,11 @@ Republicans_State("Minnesota")
 ### State_Party_Data
 This function uses the functions above to give the number of Democrats, Republicans and Independents sent to Congress by a given state in each of the election years in the data. The data is formatted in such a way to make it easy to produce a graph of the info. 
 
+<<<<<<< HEAD
 ``` {r}
+=======
+``` r
+>>>>>>> 15f531be400b92db94bb5413431a7ab608a94d5f
 State_Party_Data("Maryland")
 ```
 ### House_Control
@@ -82,6 +86,7 @@ This function takes the name of a Representative who won a general election in t
 Representative_Info("Nancy Pelosi")
 ```
 
+<<<<<<< HEAD
 ## Midterm Election Plots
 The following functions will plot midterm election years between and including 1998 and 2016. If the user inputs an invalid year, instructions will appear. Each year includes data on all 50 states for comparison. 
 
@@ -106,3 +111,5 @@ This scatter plot graphs the population of each state with respect to the number
 pop_majority_party(2010)
 ```
 
+=======
+>>>>>>> 15f531be400b92db94bb5413431a7ab608a94d5f
