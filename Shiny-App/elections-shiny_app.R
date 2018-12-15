@@ -3,11 +3,13 @@ library(ggplot2)
 library(dplyr)
 library(rvest)
 library(shinythemes)
+library(houseelections)
 
-load("C:/Users/rsbuc/Documents/GitHub/week-09-inclass-blrp-project/Cleaned_House_Election_Results_States.RData")
 house_data <- Cleaned_House_Election_Results_States
 house_data$District <- gsub('[0-9]', '', house_data$District)
 house_data$District <- gsub('at-large', '', house_data$District)
+
+load("~/GitHub/final-project-houseelections/houseelections/houseelections/data/Election_Data2.Rdata")
 
 #Import population by state data
 pop_url <- "https://simple.wikipedia.org/wiki/List_of_U.S._states_by_population"
@@ -87,12 +89,33 @@ ui <- navbarPage("House Elections: A Look at Historic Data and Social Determinan
                                    of the relationship would probably be best explored using 
                                    a logistic regression model."),
                                 br(),br(),
-                                tableOutput("chisq")
-                                
-      )
-   )
+                                tableOutput("chisq")))),  
+      navbarMenu("Placeholder", 
+                 tabPanel("State",
+                          sidebarLayout(
+                            sidebarPanel(
+                                selectizeInput("stateInput", "State",choices = state.name)), 
+                            mainPanel(
+                              plotOutput("graph")))),
+                tabPanel("District", 
+                         sidebarLayout(
+                           sidebarPanel(
+                             selectizeInput("stateInput", "State", choices = state.name),
+                                  numericInput("districtInput", "District No:", 1)),
+                           mainPanel(
+                                tableOutput("district_party"), 
+                                      tableOutput("district")))),
+                tabPanel("Representative", 
+                         sidebarLayout(
+                           sidebarPanel(
+                             selectizeInput("repInput", "Representative", choices = unique(Election_Data$Winner))), 
+                           mainPanel(
+                                tableOutput("rep"))))
+   
+   
+ )
 )
-)
+
 
 # Define server logic required to draw a bar
 server <- function(input, output) {
@@ -200,6 +223,44 @@ server <- function(input, output) {
     
   })
   
+  output$district_party <- renderTable({
+    party <- District_Party(input$stateInput, input$districtInput)
+    names <- names(party)
+    party <- as.data.frame(party)
+    party[,2] <- names
+    party[,c(1,2)] <- party[,c(2,1)]
+    names(party) <- c("", "")
+    party
+  })
+  
+  output$district <- renderTable({
+    district <- District_Results(input$stateInput, input$districtInput)
+    district
+  })
+  
+  output$graph <- renderPlot({
+    if(nrow(State_Party_Data(input$stateInput)) == 20){
+      g <- ggplot(State_Party_Data(input$stateInput),aes(x=year,y=num,fill=factor(party)))+
+        geom_bar(stat="identity",position="dodge")+
+        xlab("Year")+ylab("Number of Representatives Sent to Congress")+
+        scale_fill_manual(values = c("royalblue3", "red1"))+
+        guides(fill = guide_legend(title = NULL))
+    }else{
+      g <- ggplot(State_Party_Data(input$stateInput),aes(x=year,y=num,fill=factor(party)))+
+        geom_bar(stat="identity",position="dodge")+
+        xlab("Year")+ylab("Number of Representatives Sent to Congress")+
+        scale_fill_manual(values = c("royalblue3", "gray", "red1"))+
+        guides(fill = guide_legend(title = NULL))
+    }
+    g
+  })
+  
+  output$rep <- renderTable({
+    repInfo <- Representative_Info(input$repInput)
+    names <- names(repInfo)
+    repInfo <- as.data.frame(repInfo)
+    repInfo
+  })
     }  
    
 
