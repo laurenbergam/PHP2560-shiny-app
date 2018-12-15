@@ -1,3 +1,13 @@
+#' Plot House Majority with President Party
+#'
+#' Given a year, this function compares the dominant House party of each state versus
+#' the party of the president. 
+#' @param year The year must be an even number between and including 1998 and 2016. 
+#' @export
+#' @examples
+#' house_prez_party(2002)
+
+
 house_prez_party <- function(year) {
   
   #Import data of party divisions through history

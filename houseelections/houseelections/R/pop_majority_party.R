@@ -1,3 +1,14 @@
+#' Plot Population by Representatives with Majority Party
+#'
+#' Given a year, this function compares the population versus number of representatives
+#' by state with the color of the point the state's House party majority. 
+#' @param year The year must be an even number between and including 1998 and 2016. 
+#' @export
+#' @examples
+#' pop_majority_party(2002)
+
+
+
 pop_majority_party <- function(year) {
   if (year >= 1998 & year <= 2016 & as.numeric(year) %%2 == 0) {
     
