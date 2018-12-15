@@ -31,6 +31,7 @@ pop_majority_party <- function(year) {
     pop_table[,2] = as.integer(gsub(",","",pop_table[,2]))
     
     arranged_pop_table = pop_table %>% arrange(State)
+    arranged_pop_table$state_abbr <- c("AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY" )
     
     #Consolidate districts into states and count number of representatives in each party
     state_party_count_2 <- by_state %>%
@@ -40,20 +41,23 @@ pop_majority_party <- function(year) {
                 total_rep = num_rep + num_dem)
     
     #Column bind population to dem/rep count table
-    state_party_count_4 <- state_party_count_2 %>% arrange(State) %>% cbind(arranged_pop_table[,2])
+    state_party_count_4 <- state_party_count_2 %>% 
+      arrange(State) %>% 
+      cbind(arranged_pop_table[,2]) %>%
+      cbind(Abbr = arranged_pop_table[,3])
     colnames(state_party_count_4)[5] = "Population"
     
     #sapply(state_party_count_4, class) necessary columns contain integers
     
     #Population vs Number of Representatives
     #Color is the majority party for each state
-    #Have option for labels, but reduces readability
     #Have option for log scale to increase readability
     ggplot(state_party_count_4 %>% mutate(pct_republican = num_rep/total_rep, majority = ifelse(pct_republican > 0.5, "majority_republican", "majority_democrat")), aes(Population, total_rep) ) +
       geom_point(size = 4, alpha = 0.5, aes(color = majority)) +
       scale_color_manual(values = c("blue", "red"))+
+      geom_smooth(method=lm, se = FALSE) +
+      geom_text_repel(aes(label = Abbr)) +
       theme_bw() 
-    #  geom_text_repel(aes(label = State)) 
     #  scale_x_log10()
     
   } else {
