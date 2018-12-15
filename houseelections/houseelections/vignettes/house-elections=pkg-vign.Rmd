@@ -14,7 +14,8 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
-
+library(houseelections)
+load("~/R/final-project-houseelections/houseelections/houseelections/data/Election_Data2.Rdata")
 ```
 
 ## Gross Domestic Product Data (gdp_state and gdp_status)
@@ -25,7 +26,7 @@ The function gdp_state is used to quickly print the a specific state's historic 
 
 For example, if I want to know Virginia's historic per capita GDP, I will use "Virginia" as the argument in gdp_state, as follows:
 
-```r
+```{r}
 gdp_state("Virginia")
 ```
 
@@ -34,8 +35,74 @@ The function gdp_status is used to quickly find out if a specific state's per ca
 
 For example, if I want to know if Virginia's per capita GDP increased between 2012 and 2016, I will use "Virginia", "2012", and "2016" in the function's arguments, as follows:
 
-```r
+```{r}
 gdp_status("Virginia","2012","2016")
 ```
 
 Note: year1 must occur before year2. This is to prevent incorrect conclusions drawn from the function output, as the function is intended for changes over time.
+
+##House of Representatives Election Data 1998-2016 Functions
+
+The following functions can be used to obtain information from the dataset "Election_Data", which contains data from the past 20 years of House of Representatives elections (no Senate elections). This data was scraped from Wikipedia.
+
+### Democrats_State (also Republicans_State, Independents_State)
+This function takes the name of a state, and tells you how many Democrats that state sent to Congress for each of the years included in the data. There are similar functions for Republicans and Independents as well. Note that the state must be properly capitalized when entered.
+
+```{r}
+Democrats_State("Kentucky")
+Republicans_State("Minnesota")
+```
+
+### State_Party_Data
+This function uses the functions above to give the number of Democrats, Republicans and Independents sent to Congress by a given state in each of the election years in the data. The data is formatted in such a way to make it easy to produce a graph of the info. 
+
+``` {r}
+State_Party_Data("Maryland")
+```
+### House_Control
+Given an election year, this function returns the number of Republicans, Democrats and Independents sent to the House of Representatives that year. It also returns the majority party, as well as how many more votes the majority party has over the minority party.
+
+```{r}
+House_Control(2004)
+```
+
+### District_Results and District_Party
+These functions give information about a district. The function District_Results returns a table with all of the election results in the data from that district. The function District_Party tells you how many Democrats, Republicans and Independents that district sent to the House of Representatives in the years covered by the data, as well as the average margin of victory of candidates in that district. The functions take two inputs: the state, and the number of the district. The state is a character input which must be capitalized, the district number is a numeric. For states that only have one district, the second argument can be left blank.
+
+```{r, eval = F}
+District_Results("Arkansas", 3)
+```
+```{r}
+District_Party("Arkansas", 3)
+```
+### Representative_Info
+This function takes the name of a Representative who won a general election in the years covered by the data. It returns a few basic facts about them.
+
+```{r}
+Representative_Info("Nancy Pelosi")
+```
+
+## Midterm Election Plots
+The following functions will plot midterm election years between and including 1998 and 2016. If the user inputs an invalid year, instructions will appear. Each year includes data on all 50 states for comparison. 
+
+###reps_by_state_stacked 
+Function reps_by_state_stacked results in a stacked bar chart of the number of Democrats, Republicans, and Independent members of the House in each state. Bars are stacked to compare the total number of representatives across the states. 
+
+```{r}
+reps_by_state_stacked(2006) 
+```
+
+###house_prez_party
+The following function produces a bar chart ordered by years with columns above zero indicating the number of Democrats in the House and columns below zero indicating the number of Republicans in the House. The color of the bars represent the party of the President at each year. 
+
+```{r}
+house_prez_party(2002)
+```
+
+###pop_majority_party
+This scatter plot graphs the population of each state with respect to the number of representatives in that state. All years are fairly linear since, by design of the electoral system, there are approximately 700,000 citizens per House representative. The color of each point indicates the party majority of that state. 
+
+```{r}
+pop_majority_party(2010)
+```
+
