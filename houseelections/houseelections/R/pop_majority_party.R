@@ -10,6 +10,9 @@
 
 
 pop_majority_party <- function(year) {
+  
+  data("Election_Data2")
+  
   if (year >= 1998 & year <= 2016 & as.numeric(year) %%2 == 0) {
     
     #Import population by state data

@@ -10,6 +10,8 @@
 
 house_prez_party <- function(year) {
   
+  data("Election_Data2")
+  
   #Import data of party divisions through history
   all_years_url <- "https://history.house.gov/Institution/Party-Divisions/Party-Divisions/"
   all_years_page <- read_html(all_years_url)
