@@ -119,7 +119,7 @@ server <- function(input, output) {
 
   output$statePlot <- renderPlot({
 
-     tabstate <- access_bystate %>%
+     tabstate %>%
         filter(state_name == input$stateInput, couldnt_see_doc_due_to_cost %in% c("yes", "no")) %>%
         group_by(race) %>%
         mutate(totalfreq = sum(Freq, na.rm = TRUE), proportion = Freq/totalfreq)
@@ -137,7 +137,7 @@ server <- function(input, output) {
   
   output$countryPlot <- renderPlot({
     
-    tabcountry <- access_bycountry %>%
+    tabcountry %>%
       filter(couldnt_see_doc_due_to_cost %in% c("yes", "no")) %>%
       group_by(race) %>%
       mutate(totalfreq = sum(Freq, na.rm = TRUE), proportion = Freq/totalfreq)
