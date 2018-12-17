@@ -37,7 +37,10 @@ arranged_pop_table = pop_table %>% arrange(State)
 ui <- navbarPage("House Elections: A Look at Historic Data and Social Determinants",
    
       # Show a plot of the generated state-specific bar
-          tabPanel("Welcome", p("Welcome to our app! Description here...")),
+          tabPanel("Welcome", p("Welcome to our app! Here, you can begin to explore historic
+                                elections data from the U.S. House of Representatives as well as 
+                                some healthcare access data from the Behavioral Risk Factor
+                                Surveillance System.")),
           tabPanel("Visualizing Elections",
                      sidebarLayout(
                        sidebarPanel(
