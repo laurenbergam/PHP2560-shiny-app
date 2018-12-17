@@ -3,6 +3,7 @@ library(ggplot2)
 library(dplyr)
 library(rvest)
 library(shinythemes)
+library(ggrepel)
 
 load("~/GitHub/final-project-houseelections/Shiny-App/data/tabcountry.Rdata")
 load("~/GitHub/final-project-houseelections/Shiny-App/data/tabstate.Rdata")
@@ -32,9 +33,11 @@ pop_table[,2] = as.integer(gsub(",","",pop_table[,2]))
 
 #Arrange by state
 arranged_pop_table = pop_table %>% arrange(State)
+arranged_pop_table$state_abbr <- c("AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY" )
+#End for plot 3
 
 # Define UI for application
-ui <- navbarPage("House Elections: A Look at Historic Data and Social Determinants",
+ui <- navbarPage(theme = shinytheme("spacelab"), "House Elections: A Look at Historic Data and Social Determinants",
    
       # Show a plot of the generated state-specific bar
           tabPanel("Welcome", p("Welcome to our app! Here, you can begin to explore historic
@@ -56,7 +59,7 @@ ui <- navbarPage("House Elections: A Look at Historic Data and Social Determinan
                        mainPanel(
                          plotOutput("rep_count_plot") ,
                          plotOutput("state_party_plot"),
-                         plotOutput("pop_state_plot")))),
+                         plotOutput("pop_state_2")))),
 
             tabPanel("Healthcare", 
                      # Sidebar with a dropdown input for filtering by state
@@ -207,26 +210,29 @@ server <- function(input, output) {
   
   
   #plot 3
-  output$pop_state_plot <- renderPlot({
-    pop_state <- house_data[[as.character(input$year)]] %>%
+  output$pop_state_2 <- renderPlot({
+    
+    pop_state_2 <- Election_Data %>%
+      filter(Election_Year == input$year) %>%
       
       #Consolidate districts into states and count number of representatives in each party
       group_by(State) %>%
       summarize(num_rep = sum(Winning_Party=="Republican",na.rm=TRUE),
                 num_dem = sum(Winning_Party=="Democrat",na.rm=TRUE),
-                total_rep = num_rep + num_dem)
+                total_rep = num_rep + num_dem) %>%
+      
+      #Column bind population to dem/rep count table
+      arrange(State) %>%
+      cbind(Population = arranged_pop_table[,2]) %>%
+      cbind(Abbr = arranged_pop_table[,3])
     
-    #Column bind population to dem/rep count table
-    state_party_count_4 <- state_party_count_2 %>% arrange(State) %>% cbind(arranged_pop_table[,2])
-    colnames(state_party_count_4)[5] = "Population"
-    
-    
-    ggplot(state_party_count_4 %>% mutate(pct_republican = num_rep/total_rep, majority = ifelse(pct_republican > 0.5, "majority_republican", "majority_democrat")), aes(Population, total_rep) ) +
+    ggplot(pop_state_2 %>% mutate(pct_republican = num_rep/total_rep, majority = ifelse(pct_republican > 0.5, "majority_republican", "majority_democrat")), aes(Population, total_rep) ) +
       geom_point(size = 4, alpha = 0.5, aes(color = majority)) +
-      scale_color_manual(values = c("blue", "red"))+
+      scale_color_manual(values = c("blue", "red")) +
+      geom_smooth(method=lm, se = FALSE) +
+      geom_text_repel(aes(label = Abbr)) +
+      #scale_x_log10() + #For readability
       theme_bw() 
-    
-    
   })
   
   output$district_party <- renderTable({
