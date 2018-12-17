@@ -4,7 +4,13 @@ library(dplyr)
 library(rvest)
 library(shinythemes)
 
+load("~/GitHub/final-project-houseelections/Shiny-App/data/tabcountry.Rdata")
+load("~/GitHub/final-project-houseelections/Shiny-App/data/tabstate.Rdata")
+
 load("~/R/week-09-inclass-blrp-project/Cleaned_House_Election_Results_States.Rdata")
+
+
+
 house_data <- Cleaned_House_Election_Results_States
 house_data$District <- gsub('[0-9]', '', house_data$District)
 house_data$District <- gsub('at-large', '', house_data$District)
