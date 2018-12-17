@@ -1,7 +1,7 @@
 
 library(shiny)
 library(shinythemes)
-load("~/R/BLRP/data/Election_Data2.Rdata")
+load("~/R/final-project-houseelections/houseelections/houseelections/data/Election_Data2.Rdata")
 
 ui <- fluidPage(theme = shinytheme("spacelab"),
   titlePanel("House of Representatives Election Data 1998-2016
@@ -58,7 +58,7 @@ server <- function(input, output) {
   output$rep <- renderTable({
     repInfo <- Representative_Info(input$repInput)
     names <- names(repInfo)
-    repInfo <- as.data.frame(repInfo)
+    
     repInfo
   })
 }
