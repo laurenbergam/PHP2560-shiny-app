@@ -7,7 +7,7 @@ library(shinythemes)
 load("~/GitHub/final-project-houseelections/Shiny-App/data/tabcountry.Rdata")
 load("~/GitHub/final-project-houseelections/Shiny-App/data/tabstate.Rdata")
 
-load("~/R/week-09-inclass-blrp-project/Cleaned_House_Election_Results_States.Rdata")
+load("~/GitHub/final-project-houseelections/houseelections/houseelections/data/Election_Data2.Rdata")
 
 
 
@@ -125,7 +125,7 @@ server <- function(input, output) {
 
   output$statePlot <- renderPlot({
 
-     tabstate %>%
+     tabstate <- tabstate %>%
         filter(state_name == input$stateInput, couldnt_see_doc_due_to_cost %in% c("yes", "no")) %>%
         group_by(race) %>%
         mutate(totalfreq = sum(Freq, na.rm = TRUE), proportion = Freq/totalfreq)
@@ -143,7 +143,7 @@ server <- function(input, output) {
   
   output$countryPlot <- renderPlot({
     
-    tabcountry %>%
+    tabcountry <- tabcountry %>%
       filter(couldnt_see_doc_due_to_cost %in% c("yes", "no")) %>%
       group_by(race) %>%
       mutate(totalfreq = sum(Freq, na.rm = TRUE), proportion = Freq/totalfreq)
