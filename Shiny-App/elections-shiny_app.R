@@ -3,13 +3,11 @@ library(ggplot2)
 library(dplyr)
 library(rvest)
 library(shinythemes)
-library(houseelections)
 
+load("~/R/week-09-inclass-blrp-project/Cleaned_House_Election_Results_States.Rdata")
 house_data <- Cleaned_House_Election_Results_States
 house_data$District <- gsub('[0-9]', '', house_data$District)
 house_data$District <- gsub('at-large', '', house_data$District)
-
-load("~/GitHub/final-project-houseelections/houseelections/houseelections/data/Election_Data2.Rdata")
 
 #Import population by state data
 pop_url <- "https://simple.wikipedia.org/wiki/List_of_U.S._states_by_population"
@@ -89,32 +87,31 @@ ui <- navbarPage("House Elections: A Look at Historic Data and Social Determinan
                                    of the relationship would probably be best explored using 
                                    a logistic regression model."),
                                 br(),br(),
-                                tableOutput("chisq")))),  
-      navbarMenu("Placeholder", 
-                 tabPanel("State",
-                          sidebarLayout(
-                            sidebarPanel(
-                                selectizeInput("stateInput", "State",choices = state.name)), 
-                            mainPanel(
-                              plotOutput("graph")))),
-                tabPanel("District", 
-                         sidebarLayout(
-                           sidebarPanel(
-                             selectizeInput("stateInput", "State", choices = state.name),
-                                  numericInput("districtInput", "District No:", 1)),
-                           mainPanel(
-                                tableOutput("district_party"), 
-                                      tableOutput("district")))),
-                tabPanel("Representative", 
-                         sidebarLayout(
-                           sidebarPanel(
-                             selectizeInput("repInput", "Representative", choices = unique(Election_Data$Winner))), 
-                           mainPanel(
-                                tableOutput("rep"))))
-   
-   
- )
-)
+                                tableOutput("chisq")))),
+                            navbarMenu("Placeholder", 
+                                           tabPanel("State",
+                                                    sidebarLayout(
+                                                      sidebarPanel(
+                                                        selectizeInput("stateInput", "State",choices = state.name)), 
+                                                      mainPanel(
+                                                        plotOutput("graph")))),
+                                           tabPanel("District", 
+                                                    sidebarLayout(
+                                                      sidebarPanel(
+                                                        selectizeInput("stateInput", "State", choices = state.name),
+                                                        numericInput("districtInput", "District No:", 1)),
+                                                      mainPanel(
+                                                        tableOutput("district_party"), 
+                                                        tableOutput("district")))),
+                                           tabPanel("Representative", 
+                                                    sidebarLayout(
+                                                      sidebarPanel(
+                                                        selectizeInput("repInput", "Representative", choices = unique(Election_Data$Winner))), 
+                                                      mainPanel(
+                                                        tableOutput("rep"))))
+                                
+      )
+   )
 
 
 # Define server logic required to draw a bar
