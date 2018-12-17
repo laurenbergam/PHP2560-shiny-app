@@ -7,7 +7,6 @@ library(ggrepel)
 
 load("~/GitHub/final-project-houseelections/Shiny-App/data/tabcountry.Rdata")
 load("~/GitHub/final-project-houseelections/Shiny-App/data/tabstate.Rdata")
-
 load("~/GitHub/final-project-houseelections/houseelections/houseelections/data/Election_Data2.Rdata")
 
 
@@ -40,10 +39,15 @@ arranged_pop_table$state_abbr <- c("AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE
 ui <- navbarPage(theme = shinytheme("spacelab"), "House Elections: A Look at Historic Data and Social Determinants",
    
       # Show a plot of the generated state-specific bar
-          tabPanel("Welcome", p("Welcome to our app! Here, you can begin to explore historic
-                                elections data from the U.S. House of Representatives as well as 
-                                some healthcare access data from the Behavioral Risk Factor
-                                Surveillance System.")),
+          tabPanel("Welcome", 
+                  h4("Welcome to our app! Here, you can begin to explore historic
+                        elections data from the U.S. House of Representatives as well as 
+                        some healthcare access data from the Centers for Disease Control
+                        and Prevention Behavioral Risk Factor Surveillance System.
+                        In 'Visualizing Elections', you can look at election trends across
+                        time. In 'Healthcare', you can look at how medical costs and race 
+                        interact to influence healthcare access."),
+                  img(src='map.png', align = "center", width = '50%', height = '50%')),
           tabPanel("Visualizing Elections",
                      sidebarLayout(
                        sidebarPanel(
@@ -99,31 +103,11 @@ ui <- navbarPage(theme = shinytheme("spacelab"), "House Elections: A Look at His
                                    of the relationship would probably be best explored using 
                                    a logistic regression model."),
                                 br(),br(),
-                                tableOutput("chisq")))),
-                            navbarMenu("Placeholder", 
-                                           tabPanel("State",
-                                                    sidebarLayout(
-                                                      sidebarPanel(
-                                                        selectizeInput("stateInput", "State",choices = state.name)), 
-                                                      mainPanel(
-                                                        plotOutput("graph")))),
-                                           tabPanel("District", 
-                                                    sidebarLayout(
-                                                      sidebarPanel(
-                                                        selectizeInput("stateInput", "State", choices = state.name),
-                                                        numericInput("districtInput", "District No:", 1)),
-                                                      mainPanel(
-                                                        tableOutput("district_party"), 
-                                                        tableOutput("district")))),
-                                           tabPanel("Representative", 
-                                                    sidebarLayout(
-                                                      sidebarPanel(
-                                                        selectizeInput("repInput", "Representative", choices = unique(Election_Data$Winner))), 
-                                                      mainPanel(
-                                                        tableOutput("rep"))))
+                                tableOutput("chisq"))))
+                            
                                 
       )
-   )
+  
 
 
 # Define server logic required to draw a bar
@@ -235,44 +219,6 @@ server <- function(input, output) {
       theme_bw() 
   })
   
-  output$district_party <- renderTable({
-    party <- District_Party(input$stateInput, input$districtInput)
-    names <- names(party)
-    party <- as.data.frame(party)
-    party[,2] <- names
-    party[,c(1,2)] <- party[,c(2,1)]
-    names(party) <- c("", "")
-    party
-  })
-  
-  output$district <- renderTable({
-    district <- District_Results(input$stateInput, input$districtInput)
-    district
-  })
-  
-  output$graph <- renderPlot({
-    if(nrow(State_Party_Data(input$stateInput)) == 20){
-      g <- ggplot(State_Party_Data(input$stateInput),aes(x=year,y=num,fill=factor(party)))+
-        geom_bar(stat="identity",position="dodge")+
-        xlab("Year")+ylab("Number of Representatives Sent to Congress")+
-        scale_fill_manual(values = c("royalblue3", "red1"))+
-        guides(fill = guide_legend(title = NULL))
-    }else{
-      g <- ggplot(State_Party_Data(input$stateInput),aes(x=year,y=num,fill=factor(party)))+
-        geom_bar(stat="identity",position="dodge")+
-        xlab("Year")+ylab("Number of Representatives Sent to Congress")+
-        scale_fill_manual(values = c("royalblue3", "gray", "red1"))+
-        guides(fill = guide_legend(title = NULL))
-    }
-    g
-  })
-  
-  output$rep <- renderTable({
-    repInfo <- Representative_Info(input$repInput)
-    names <- names(repInfo)
-    repInfo <- as.data.frame(repInfo)
-    repInfo
-  })
     }  
    
 
