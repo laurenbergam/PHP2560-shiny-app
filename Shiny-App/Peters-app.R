@@ -11,7 +11,7 @@ ui <- fluidPage(theme = shinytheme("spacelab"),
         tabPanel("State",
                  sidebarPanel(
                    selectizeInput("stateInput", "State",choices = state.name)), plotOutput("graph")),
-        tabPanel("District", sidebarPanel(selectizeInput("stateInput", "State",
+        tabPanel("District", sidebarPanel(selectizeInput("stateInput2", "State",
                                                                                                     choices = state.name),
                  numericInput("districtInput", "District No:", 1)),tableOutput("district_party"), tableOutput("district")),
         tabPanel("Representative", sidebarPanel(
@@ -24,7 +24,7 @@ ui <- fluidPage(theme = shinytheme("spacelab"),
 
 server <- function(input, output) {
   output$district_party <- renderTable({
-    party <- District_Party(input$stateInput, input$districtInput)
+    party <- District_Party(input$stateInput2, input$districtInput)
     names <- names(party)
     party <- as.data.frame(party)
     party[,2] <- names
@@ -34,7 +34,7 @@ server <- function(input, output) {
   })
 
   output$district <- renderTable({
-   district <- District_Results(input$stateInput, input$districtInput)
+   district <- District_Results(input$stateInput2, input$districtInput)
     district
   })
 
