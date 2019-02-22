@@ -1,13 +1,11 @@
-# Final Projects
+# Shiny App - House of Representatives Election Data
 
 In this Folder you will place all of your final group projects. Please complete the following steps.
 
-1. List the name of all Group Members below:
-    a. Lauren Bergam
-    b. Ryan Buckland
-    c. Peter Shewmaker
+1. Download as zip file
     
-2. Change the name of the R Package folder to be the name of your R package. 
-3. Copy your project files into the appropriate folders. Note:
-    - Do not add R projects to either folder. 
-    - make sure that any data I need to use to run the package or app is in the folders as well. 
+2. Extract folder, rename as PHP2560-shiny-app
+
+3. Put PHP2560-shiny-app in appropriate file path folder for your default directory
+
+4. Run app.R in RStudio
