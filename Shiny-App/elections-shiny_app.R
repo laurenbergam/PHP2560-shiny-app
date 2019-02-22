@@ -1,14 +1,22 @@
+#install.packages("ggplot2")
+#install.packages("dplyr")
+#install.packages("rvest")
+#install.packages("shinythemes")
+#install.packages("ggrepel")
+#install.packages("xml2")
+
+
 library(shiny)
 library(ggplot2)
 library(dplyr)
 library(rvest)
 library(shinythemes)
 library(ggrepel)
+library(xml2)
 
 load("~/GitHub/final-project-houseelections/Shiny-App/data/tabcountry.Rdata")
 load("~/GitHub/final-project-houseelections/Shiny-App/data/tabstate.Rdata")
-load("~/GitHub/final-project-houseelections/houseelections/houseelections/data/Election_Data2.Rdata")
-
+load("~/GitHub/final-project-houseelections/Shiny-App/data/Cleaned_House_Election_Results_States.Rdata")
 
 
 house_data <- Cleaned_House_Election_Results_States
@@ -19,12 +27,12 @@ house_data$District <- gsub('at-large', '', house_data$District)
 pop_url <- "https://simple.wikipedia.org/wiki/List_of_U.S._states_by_population"
 pop_page <- read_html(pop_url)
 pop_tables <- html_table(html_nodes(pop_page, "table"), fill = TRUE)
-pop_table <- pop_tables[[2]]
+pop_table <- pop_tables[[1]]
 
 #Some light cleaning and relabeling
 pop_table <- select(pop_table, 3,4)
-pop_table <- pop_table[ -c(30,50,53:64), ]
-colnames(pop_table)[colnames(pop_table)=="State or territory"] <- "State"
+pop_table <- pop_table[ -c(30,50,53:69), ]
+colnames(pop_table)[colnames(pop_table)=="State, federal district, or territory"] <- "State"
 colnames(pop_table)[2] = "Population_Est"
 
 #Remove commas from integers
@@ -37,121 +45,51 @@ arranged_pop_table$state_abbr <- c("AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE
 
 # Define UI for application
 ui <- navbarPage(theme = shinytheme("spacelab"), "House Elections: A Look at Historic Data and Social Determinants",
-   
-      # Show a plot of the generated state-specific bar
-          tabPanel("Welcome", 
-                  h4("Welcome to our app! Here, you can begin to explore historic
-                        elections data from the U.S. House of Representatives as well as 
-                        some healthcare access data from the Centers for Disease Control
-                        and Prevention Behavioral Risk Factor Surveillance System.
-                        In 'Visualizing Elections', you can look at election trends across
-                        time. In 'Healthcare', you can look at how medical costs and race 
-                        interact to influence healthcare access."),
-                  img(src='map.png', align = "center", width = '50%', height = '50%')),
-          tabPanel("Visualizing Elections",
-                     sidebarLayout(
-                       sidebarPanel(
-                         sliderInput("year",
-                                     "Election Years",
-                                     min = 1998,
-                                     max = 2016,
-                                     value = 2002,
-                                     step = 2,
-                                     sep = ""
-                         )
-                       ),
-                       mainPanel(
-                         plotOutput("rep_count_plot") ,
-                         plotOutput("state_party_plot"),
-                         plotOutput("pop_state_2")))),
+                 
+                 # Show a plot of the generated state-specific bar
+                 tabPanel("Welcome", 
+                          br(),br(),br(),br(),
+                          h3("Hello RStudio Internship Committee!", align = "center"),
+                          h4(tags$div("This is my portion of an app I developed on a team in a graduate level class.
+                                      This app pulls data from our own R datatable cleaned and compiled from the internet and directly from a wikipedia table. 
+                                      My Visualizing Elections tab shows historic trends dating between 1998 and 2016 of 
+                                      the United States House of Representatives election data. ", align = "center"))
+                          ),
+                 tabPanel("Visualizing Elections",
+                          sidebarLayout(
+                            sidebarPanel(
+                              sliderInput("year",
+                                          "Election Years",
+                                          min = 1998,
+                                          max = 2016,
+                                          value = 2002,
+                                          step = 2,
+                                          sep = ""
+                              )
+                            ),
+                            mainPanel(
+                              plotOutput("rep_count_plot") ,
+                              h4("The graphic above is a simple bar graph counting the number of House Representatives
+                                 in each state, separated by party."),
+                              br(),br(),
+                              plotOutput("state_party_plot"),
+                              h4("This bar graph shows the same data as the first except as a  
+                                 net value, that is, the number of Representatives in the majority party
+                                 minus the number of Representatives in the minority party per state."),
+                              br(),br(),
+                              plotOutput("pop_state_2"),
+                              h4("This scatter plot graphs state population vs number of Representatives. 
+                                 This is a linear relationship by design since a representative is appointed
+                                 per 700,000 US citizens, on average. The color of each point shows the
+                                 dominating party of that state."),
+                              br(),br())))
+                 
+                            )
 
-            tabPanel("Healthcare", 
-                     # Sidebar with a dropdown input for filtering by state
-                     sidebarLayout(
-                       sidebarPanel(
-                         selectInput("stateInput", "State",
-                                     c("ALABAMA", "ALASKA", "ARIZONA", "ARKANSAS", "CALIFORNIA", 
-                                       "COLORADO", "CONNECTICUT", "DELAWARE", "DISTRICT OF COLUMBIA", 
-                                       "FLORIDA", "GEORGIA", "HAWAII", "IDAHO", "ILLINOIS", "INDIANA",
-                                       "IOWA", "KANSAS", "KENTUCKY", "LOUISIANA", "MAINE", "MARYLAND",
-                                       "MASSACHUSETTS", "MICHIGAN", "MINNESOTA", "MISSISSIPPI", 
-                                       "MISSOURI", "MONTANA", "NEBRASKA", "NEVADA", "NEW HAMPSHIRE",
-                                       "NEW JERSEY", "NEW MEXICO", "NEW YORK", "NORTH CAROLINA", 
-                                       "NORTH DAKOTA", "OHIO", "OKLAHOMA", "OREGON", "PENNSYLVANIA",
-                                       "RHODE ISLAND", "SOUTH CAROLINA", "SOUTH DAKOTA", "TENNESSEE",
-                                       "TEXAS", "UTAH", "VERMONT", "VIRGINIA", "WASHINGTON",
-                                       "WEST VIRGINIA", "WISCONSIN", "WYOMING", "GUAM", "PUERTO RICO",
-                                       "U.S. VIRGIN ISLANDS"))),
-                       
-                       mainPanel(
-                                h3("We chose to explore race and access to care state-by-state.
-                                   To get this information, we analyzed a question from the 
-                                   Behavioral Risk Factor Surveillance System."),
-                                br(),br(),
-                                h4("Was there a time in the past 12 months when you needed to see a 
-                                   doctor but could not because of cost?"),
-                                br(),br(), br(), br(),
-                                plotOutput("statePlot"),
-                                br(),br(), br(), br(),
-                                plotOutput("countryPlot"),
-                                br(),br(),
-                                h4("The table below shows a chi-square test between race and 
-                                   the influence of cost on access to care. Based on the extremely
-                                   small p-value, the null hypothesis that there is no association
-                                   between the two is rejected in favor of the null. Note R
-                                   reported the p-value as 0.00 because it was so small. Any future analysis
-                                   of the relationship would probably be best explored using 
-                                   a logistic regression model."),
-                                br(),br(),
-                                tableOutput("chisq"))))
-                            
-                                
-      )
-  
 
 
 # Define server logic required to draw a bar
 server <- function(input, output) {
-
-  output$statePlot <- renderPlot({
-
-     tabstate <- tabstate %>%
-        filter(state_name == input$stateInput, couldnt_see_doc_due_to_cost %in% c("yes", "no")) %>%
-        group_by(race) %>%
-        mutate(totalfreq = sum(Freq, na.rm = TRUE), proportion = Freq/totalfreq)
-
-     ggplot(tabstate, aes(x = race, y = proportion, fill = forcats::fct_rev(couldnt_see_doc_due_to_cost))) +
-       geom_col(position = "fill") +
-       coord_flip() +
-       ggtitle("State-specific") +
-       theme(plot.title = element_text(hjust = 0.5)) +
-       scale_fill_discrete(name = "Answer") +
-       xlab("Race") +
-       ylab("Proportion")
-     
-      })
-  
-  output$countryPlot <- renderPlot({
-    
-    tabcountry <- tabcountry %>%
-      filter(couldnt_see_doc_due_to_cost %in% c("yes", "no")) %>%
-      group_by(race) %>%
-      mutate(totalfreq = sum(Freq, na.rm = TRUE), proportion = Freq/totalfreq)
-    
-    ggplot(tabcountry, aes(x = race, y = proportion, fill = forcats::fct_rev(couldnt_see_doc_due_to_cost))) +
-      geom_col(position = "fill") +
-      coord_flip() +
-      ggtitle("United States") +
-      theme(plot.title = element_text(hjust = 0.5)) +
-      scale_fill_discrete(name = "Answer") +
-      xlab("Race") +
-      ylab("Proportion")
-    
-  })
-  
-  output$chisq <- renderTable({
-    chisq_output
-  })
   
   #year scale
   output$rep_count_plot <- renderPlot({
@@ -167,8 +105,6 @@ server <- function(input, output) {
       scale_y_continuous(breaks = seq(0, 60, 10)) +
       geom_bar(stat = "identity", aes(fill = Winning_Party))
   })
-  
-
   
   
   #plot 2
@@ -188,10 +124,7 @@ server <- function(input, output) {
       scale_fill_manual(values = c("royalblue3", "red1")) +
       scale_y_continuous(breaks = seq(0, 60, 10)) +
       geom_bar(stat = "identity", aes(fill = majority))
-    
   })
-  
-  
   
   #plot 3
   output$pop_state_2 <- renderPlot({
@@ -219,9 +152,8 @@ server <- function(input, output) {
       theme_bw() 
   })
   
-    }  
-   
+}
+
 
 # Run the application 
 shinyApp(ui = ui, server = server)
-
