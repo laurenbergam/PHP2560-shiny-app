@@ -14,9 +14,10 @@ library(shinythemes)
 library(ggrepel)
 library(xml2)
 
-load("~/GitHub/final-project-houseelections/Shiny-App/data/tabcountry.Rdata")
-load("~/GitHub/final-project-houseelections/Shiny-App/data/tabstate.Rdata")
-load("~/GitHub/final-project-houseelections/Shiny-App/data/Cleaned_House_Election_Results_States.Rdata")
+load("~/GitHub/PHP2560-shiny-app/Shiny-App/data/tabcountry.Rdata")
+load("~/GitHub/PHP2560-shiny-app/Shiny-App/data/tabstate.Rdata")
+load("~/GitHub/PHP2560-shiny-app/Shiny-App/data/Cleaned_House_Election_Results_States.Rdata")
+load("~/GitHub/PHP2560-shiny-app/houseelections/houseelections/data/Election_Data2.Rdata")
 
 
 house_data <- Cleaned_House_Election_Results_States
